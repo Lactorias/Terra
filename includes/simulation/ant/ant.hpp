@@ -69,7 +69,7 @@ public:
         direction_time_elapsed = 0.0f;
     }
 
-    float get_rand_range(float width) {
+	float get_rand_range(float width) {
         constexpr int32_t max_val = 10000;
         constexpr int32_t half = max_val / 2;
         constexpr float div = 1.0f / float(max_val);

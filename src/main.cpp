@@ -1,6 +1,7 @@
 #include "../includes/renderer/renderer.hpp"
 #include "../includes/simulation/ant/ant.hpp"
 #include "../includes/simulation/world/colony.hpp"
+#include "../includes/simulation/world/world.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -9,6 +10,7 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/WindowStyle.hpp>
+
 #include <iostream>
 
 int main() {
@@ -20,6 +22,8 @@ int main() {
                             sf::Style::Default, settings);
 
     Colony colony(100, 100, 300);
+
+    World world;
 
     Renderer renderer;
 
@@ -39,7 +43,7 @@ int main() {
 
         window.clear();
 
-        renderer.render(window, colony, dt);
+        renderer.render(window, colony, dt, world, window);
 
         window.display();
     }
