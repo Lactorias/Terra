@@ -15,6 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add the executable by specifying the source file
 
 add_compile_options(
+  -g
+  -Og
   -Wall
   -Wextra
   -pedantic-errors
@@ -34,5 +36,17 @@ add_compile_options(
   -fstack-protector-strong
 )
 
-add_executable(terra src/main.cpp)
-target_link_libraries(terra sfml-graphics sfml-window sfml-system)
+set(TERRA_SOURCES
+	src/main.cpp
+	src/ant.cpp
+	src/renderer.cpp
+	src/food.cpp
+	src/colony.cpp
+)
+
+
+add_executable(terra ${TERRA_SOURCES})
+target_link_libraries(terra PRIVATE sfml-graphics sfml-window sfml-system)
+
+#add_executable(benchmark_simulation src/benchmark.cpp)
+#target_link_libraries(benchmark_simulation PRIVATE benchmark sfml-graphics sfml-window sfml-system)
