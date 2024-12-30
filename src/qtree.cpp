@@ -16,6 +16,7 @@ auto QTree::draw_q(sf::RenderWindow &window) -> void {
 
 auto QTree::subdivide(int index) -> void {
     auto child_width = width / 2.0f;
+    int what = 0;
     // fix memory leak!!!!!!!!!!!!!!!
     children[index] = std::make_unique<QTree>(
         tiles[index].square.getPosition().x,

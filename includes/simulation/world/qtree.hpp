@@ -64,6 +64,7 @@ private:
     std::array<std::unique_ptr<QTree>, 4> children;
     std::array<QTile, 4> tiles;
     const int32_t capacity = 4;
+    int what = 0;
 };
 
 #endif // QTREE

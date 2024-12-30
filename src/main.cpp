@@ -58,6 +58,7 @@ int main() {
         window.clear();
 
         renderer.render(window, colony, dt, world, window);
+        qtree.subdivide(0);
         qtree.subdivide(2);
         qtree.subdivide(1);
         qtree.subdivide(3);
