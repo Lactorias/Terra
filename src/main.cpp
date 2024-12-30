@@ -1,6 +1,7 @@
 #include "../includes/renderer/renderer.hpp"
 #include "../includes/simulation/ant/ant.hpp"
 #include "../includes/simulation/world/colony.hpp"
+#include "../includes/simulation/world/qtree.hpp"
 #include "../includes/simulation/world/world.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -23,7 +24,20 @@ int main() {
 
     Colony colony(100, 100, 300);
 
+    auto square_width = window.getSize().x / 2;
+
     World world;
+    // 400 - 50, 400 - 50, 100
+    //
+    // proper fullscreen is
+    // 5, 5, 790
+    // QTile tile = QTile(0, 0, square_width);
+    // QTile tile2 = QTile(square_width, 0, square_width);
+    // QTile tile3 = QTile(0, square_width, square_width);
+    // QTile tile4 = QTile(square_width, square_width, square_width);
+    // QTile tile = QTile();
+    //
+    QTree qtree = QTree(0, 0, square_width, square_width, 0, 0);
 
     Renderer renderer;
 
@@ -44,6 +58,15 @@ int main() {
         window.clear();
 
         renderer.render(window, colony, dt, world, window);
+        qtree.subdivide(2);
+        qtree.subdivide(1);
+        qtree.subdivide(3);
+        qtree.subdivide(0);
+        qtree.draw_q(window);
+        // window.draw(tile.square);
+        // window.draw(tile2.square);
+        // window.draw(tile3.square);
+        // window.draw(tile4.square);
 
         window.display();
     }

@@ -42,6 +42,7 @@ set(TERRA_SOURCES
 	src/renderer.cpp
 	src/food.cpp
 	src/colony.cpp
+	src/qtree.cpp
 )
 
 
