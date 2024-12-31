@@ -37,7 +37,6 @@ int main() {
     // QTile tile4 = QTile(square_width, square_width, square_width);
     // QTile tile = QTile();
     //
-    QTree qtree = QTree(0, 0, square_width, square_width, 0, 0);
 
     Renderer renderer;
 
@@ -58,17 +57,11 @@ int main() {
         window.clear();
 
         renderer.render(window, colony, dt, world, window);
-        qtree.subdivide(0);
-        qtree.subdivide(2);
-        qtree.subdivide(1);
-        qtree.subdivide(3);
-        qtree.subdivide(0);
+        QTree qtree = QTree(0, 0, square_width * 2, square_width * 2, 0, 0,
+                            colony.get_ants());
+        qtree.collect_ants();
+        qtree.observe();
         qtree.draw_q(window);
-        // window.draw(tile.square);
-        // window.draw(tile2.square);
-        // window.draw(tile3.square);
-        // window.draw(tile4.square);
-
         window.display();
     }
 }

@@ -23,14 +23,14 @@ public:
         square = sf::RectangleShape(sf::Vector2f(width, width));
         square.setPosition(x, y);
         square.setFillColor(sf::Color::Transparent);
-        square.setOutlineThickness(10);
+        square.setOutlineThickness(border_width);
         square.setOutlineColor(sf::Color::Red);
     }
 
 private:
     float x, y;
     float width;
-    int32_t border_width = 10;
+    int32_t border_width = 2;
 
 public:
     sf::RectangleShape square;
@@ -38,33 +38,43 @@ public:
 
 class QTree {
 public:
-    std::vector<Ant *> ants;
     // std::vector<Food *> food;
     // std::vector<Colony *> colonies;
 
     QTree(float x, float y, float width, float height, int32_t level,
-          int32_t max_level)
+          int32_t max_level, const std::vector<Ant> &ants)
         : x(x), y(y), width(width), height(height), level(level),
-          max_level(max_level) {
+          max_level(max_level), all_ants(ants) {
         for (size_t i = 0; i < 4; i++)
             children[i] = nullptr;
-        tiles[0] = QTile(0, 0, width);
-        tiles[1] = QTile(width, 0, width);
-        tiles[2] = QTile(0, width, width);
-        tiles[3] = QTile(width, width, width);
+        auto child_width = width / 2;
+        tiles[0] = QTile(x, y, child_width);
+        tiles[1] = QTile(x + child_width, y, child_width);
+        tiles[2] = QTile(x, y + child_width, child_width);
+        tiles[3] = QTile(x + child_width, y + child_width, child_width);
     }
 
     auto draw_q(sf::RenderWindow &window) -> void;
 
-    auto subdivide(int index) -> void;
+    auto subdivide() -> void;
+
+    auto observe() -> void;
+
+    auto collect_ants() -> void;
+
+    auto within_tile(const Ant &ant, const QTile &tile) -> bool;
 
 private:
     float x, y, width, height;
     int32_t level, max_level;
     std::array<std::unique_ptr<QTree>, 4> children;
     std::array<QTile, 4> tiles;
-    const int32_t capacity = 4;
-    int what = 0;
+    const int32_t capacity = 10;
+    int32_t current_ants = 0;
+
+public:
+    std::vector<Ant> all_ants;
+    std::vector<Ant> ants_contained{};
 };
 
 #endif // QTREE
