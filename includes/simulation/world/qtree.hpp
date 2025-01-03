@@ -38,13 +38,11 @@ public:
 
 class QTree {
 public:
-    // std::vector<Food *> food;
-    // std::vector<Colony *> colonies;
-
     QTree(float x, float y, float width, float height, int32_t level,
-          int32_t max_level, const std::vector<Ant> &ants)
+          int32_t max_level, const std::vector<Ant> &ants,
+          const std::vector<Food> &foods)
         : x(x), y(y), width(width), height(height), level(level),
-          max_level(max_level), all_ants(ants) {
+          max_level(max_level), all_ants(ants), all_foods(foods) {
         for (size_t i = 0; i < 4; i++)
             children[i] = nullptr;
         auto child_width = width / 2;
@@ -60,9 +58,45 @@ public:
 
     auto observe() -> void;
 
-    auto collect_ants() -> void;
+    template <typename T>
+    auto collect_entities(std::vector<T> &contained_entities,
+                          std::vector<T> &all_entities,
+                          std::vector<T> QTree::*child_container) -> void {
+        if (children[0] != nullptr) {
+            for (const auto &entity : contained_entities) {
+                for (int i = 0; i < 4; ++i) {
+                    if (within_tile(entity, tiles[i])) {
+                        (children[i].get()->*child_container).push_back(entity);
+                        break;
+                    }
+                }
+            }
+            contained_entities.clear();
+        } else {
+            for (auto const &entity : all_entities) {
+                if (within_tile(entity, QTile(x, y, width))) {
+                    contained_entities.push_back(entity);
+                }
+            }
+            // if (contained_entities.size() >= capacity) {
+            //     subdivide();
+            // }
+        }
+    };
 
-    auto within_tile(const Ant &ant, const QTile &tile) -> bool;
+    template <typename T>
+    auto within_tile(const T &entity, const QTile &tile) -> bool {
+        auto tile_x = tile.square.getPosition().x;
+        auto tile_y = tile.square.getPosition().y;
+        auto tile_width = tile.square.getSize().x;
+
+        return entity.position.x >= tile_x &&
+               entity.position.x <= tile_x + tile_width &&
+               entity.position.y >= tile_y &&
+               entity.position.y <= tile_y + tile_width;
+    }
+
+    auto grab_food(Ant &ant, Food &food) -> void;
 
 private:
     float x, y, width, height;
@@ -75,6 +109,9 @@ private:
 public:
     std::vector<Ant> all_ants;
     std::vector<Ant> ants_contained{};
+    std::vector<Food> all_foods;
+    std::vector<Food> foods_contained{};
+    // std::vector<Colony *> colonies;
 };
 
 #endif // QTREE

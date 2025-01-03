@@ -1,11 +1,16 @@
 #include "../includes/renderer/renderer.hpp"
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Vector2.hpp>
 
 auto Renderer::render(sf::RenderTarget &target, Colony &colony, float &DT,
                       World &world, sf::RenderWindow &window) -> void {
     render_colony(target, colony);
     for (auto &ant : colony.get_ants()) {
         render_ant(target, ant);
+        for (auto &trail : ant.trails) {
+            render_trail(target, trail);
+        }
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
@@ -39,9 +44,19 @@ auto Renderer::render_ant(sf::RenderTarget &target, const Ant &ant) -> void {
 
 auto Renderer::render_food(sf::RenderTarget &target, const Food &food_l)
     -> void {
-    sf::CircleShape food(food_l.size, 30);
+    sf::RectangleShape food(sf::Vector2f(food_l.size, food_l.size));
     food.setPosition(food_l.position);
     food.setOrigin(food_l.size, food_l.size);
     food.setFillColor(sf::Color::Green);
     target.draw(food);
+}
+
+auto Renderer::render_trail(sf::RenderTarget &target, const Trail &trail)
+    -> void {
+    sf::CircleShape traill(3);
+    traill.setPointCount(10);
+    traill.setOrigin(20, 20);
+    traill.setPosition(trail.get_pos());
+    traill.setFillColor(sf::Color::Blue);
+    target.draw(traill);
 }

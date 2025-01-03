@@ -1,8 +1,16 @@
 #include "../includes/simulation/ant/ant.hpp"
+#include "../includes/simulation/ant/trail.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Vector2.hpp>
 
 auto Ant::update(const float DT) -> void {
     update_position(DT);
+
+    trail_time_elapsed += DT;
+    if (trail_time_elapsed >= 0.33f) {
+        trails.push_back(Trail(position.x, position.y));
+        trail_time_elapsed = 0.0f;
+    }
 
     direction = lerp_angle(direction, target_direction, turn_speed * DT);
 

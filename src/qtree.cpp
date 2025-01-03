@@ -19,17 +19,18 @@ auto QTree::subdivide() -> void {
         return;
 
     auto child_width = width / 2.0f;
-    children[0] = std::make_unique<QTree>(x, y, child_width, child_width,
-                                          level + 1, max_level, all_ants);
+    children[0] =
+        std::make_unique<QTree>(x, y, child_width, child_width, level + 1,
+                                max_level, all_ants, all_foods);
     children[1] =
         std::make_unique<QTree>(x + child_width, y, child_width, child_width,
-                                level + 1, max_level, all_ants);
+                                level + 1, max_level, all_ants, all_foods);
     children[2] =
         std::make_unique<QTree>(x, y + child_width, child_width, child_width,
-                                level + 1, max_level, all_ants);
-    children[3] =
-        std::make_unique<QTree>(x + child_width, y + child_width, child_width,
-                                child_width, level + 1, max_level, all_ants);
+                                level + 1, max_level, all_ants, all_foods);
+    children[3] = std::make_unique<QTree>(x + child_width, y + child_width,
+                                          child_width, child_width, level + 1,
+                                          max_level, all_ants, all_foods);
 
     for (const auto &ant : ants_contained) {
         for (int i = 0; i < 4; ++i) {
@@ -39,47 +40,28 @@ auto QTree::subdivide() -> void {
             }
         }
     }
+
+    for (const auto &food : foods_contained) {
+        for (int i = 0; i < 4; ++i) {
+            if (within_tile(food, tiles[i])) {
+                children[i]->foods_contained.push_back(food);
+                break;
+            }
+        }
+    }
+
     ants_contained.clear();
+    foods_contained.clear();
 }
 
 auto QTree::observe() -> void {
-    if (ants_contained.size() >= capacity && children[0] == nullptr)
+    if ((ants_contained.size() >= capacity ||
+         foods_contained.size() >= capacity) &&
+        children[0] == nullptr)
         subdivide();
     if (children[0] != nullptr) {
         for (auto const &child : children) {
             child->observe();
-        }
-    }
-}
-
-auto QTree::within_tile(const Ant &ant, const QTile &tile) -> bool {
-    auto tile_x = tile.square.getPosition().x;
-    auto tile_y = tile.square.getPosition().y;
-    auto tile_width = tile.square.getSize().x;
-
-    return ant.position.x >= tile_x && ant.position.x <= tile_x + tile_width &&
-           ant.position.y >= tile_y && ant.position.y <= tile_y + tile_width;
-}
-
-auto QTree::collect_ants() -> void {
-    if (children[0] != nullptr) {
-        for (const auto &ant : ants_contained) {
-            for (int i = 0; i < 4; ++i) {
-                if (within_tile(ant, tiles[i])) {
-                    children[i]->ants_contained.push_back(ant);
-                    break;
-                }
-            }
-        }
-        ants_contained.clear();
-    } else {
-        for (auto const &ant : all_ants) {
-            if (within_tile(ant, QTile(x, y, width))) {
-                ants_contained.push_back(ant);
-            }
-        }
-        if (ants_contained.size() >= capacity) {
-            subdivide();
         }
     }
 }

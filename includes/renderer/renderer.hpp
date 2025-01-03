@@ -1,6 +1,7 @@
 #ifndef RENDERER
 #define RENDERER
 
+#include "../simulation/ant/trail.hpp"
 #include "../simulation/world/colony.hpp"
 #include "../simulation/world/world.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -22,6 +23,8 @@ private:
     auto render_ant(sf::RenderTarget &target, const Ant &ant) -> void;
 
     auto render_food(sf::RenderTarget &target, const Food &food_l) -> void;
+
+    auto render_trail(sf::RenderTarget &target, const Trail &trail) -> void;
 };
 
 #endif // RENDERER

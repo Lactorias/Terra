@@ -11,7 +11,7 @@
 class Food {
 public:
     sf::Vector2f position;
-    constexpr static int32_t size = 3;
+    constexpr static int32_t size = 9;
 
     Food(sf::Vector2f position) : position(position) {}
 
