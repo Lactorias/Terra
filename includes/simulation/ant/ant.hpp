@@ -27,7 +27,7 @@ public:
 
     auto render(sf::RenderTarget &target) -> void;
 
-    auto lerp_angle(float start, float end, float t) -> float;
+    constexpr auto lerp_angle(float start, float end, float t) -> float;
 
     std::vector<Trail> trails;
     sf::Vector2f position;

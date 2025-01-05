@@ -84,7 +84,7 @@ auto Ant::render(sf::RenderTarget &target) -> void {
     target.draw(body);
 }
 
-auto Ant::lerp_angle(float start, float end, float t) -> float {
+constexpr auto Ant::lerp_angle(float start, float end, float t) -> float {
     float difference = std::fmod(end - start + PI, 2.0f * PI) - PI;
     return start + difference * t;
 }

@@ -19,9 +19,9 @@ public:
         }
     }
 
-    auto get_ants() const -> std::vector<Ant>;
+    auto get_ants() const -> const std::vector<Ant> &;
 
-    auto get_pos() const -> sf::Vector2f;
+    auto get_pos() const -> const sf::Vector2f &;
 
     auto update(float DT) -> void;
 

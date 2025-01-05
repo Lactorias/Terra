@@ -1,9 +1,9 @@
 #include "../includes/simulation/world/colony.hpp"
 #include <SFML/System/Vector2.hpp>
 
-auto Colony::get_ants() const -> std::vector<Ant> { return ants; }
+auto Colony::get_ants() const -> const std::vector<Ant> & { return ants; }
 
-auto Colony::get_pos() const -> sf::Vector2f { return position; }
+auto Colony::get_pos() const -> const sf::Vector2f & { return position; }
 
 auto Colony::update(float DT) -> void {
     for (auto &ant : ants) {
