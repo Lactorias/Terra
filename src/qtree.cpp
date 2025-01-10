@@ -1,15 +1,18 @@
 #include "../includes/simulation/world/qtree.hpp"
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 #include <memory>
 
-auto QTree::draw_q(sf::RenderWindow &window) -> void {
+auto QTree::draw_q(sf::RenderWindow &window, sf::VertexArray &vertex_array)
+    -> void {
     for (auto const &tile : tiles) {
-        window.draw(tile.square);
+        tile.append_vertex(vertex_array, sf::Color::Red);
     }
     for (auto const &child : children) {
         if (child) {
-            child->draw_q(window);
+            child->draw_q(window, vertex_array);
         }
     }
 }
@@ -17,7 +20,10 @@ auto QTree::draw_q(sf::RenderWindow &window) -> void {
 auto QTree::subdivide() -> void {
     if (children[0] != nullptr)
         return;
-
+    if (level == max_level) {
+        return;
+    }
+    level++;
     auto child_width = width / 2.0f;
     children[0] =
         std::make_unique<QTree>(x, y, child_width, child_width, level + 1,

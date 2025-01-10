@@ -16,9 +16,9 @@ void runSimulationStep(sf::RenderWindow &window, Colony &colony,
 static void BM_SimulationStep(benchmark::State &state) {
     // Initialize SFML and other components
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 4;
+    settings.antialiasingLevel = 0;
 
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Benchmark Window",
+    sf::RenderWindow window(sf::VideoMode(2000, 800), "Benchmark Window",
                             sf::Style::Default, settings);
 
     Colony colony(100, 100, 300);

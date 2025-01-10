@@ -8,7 +8,7 @@ auto Ant::update(const float DT) -> void {
 
     trail_time_elapsed += DT;
     if (trail_time_elapsed >= 0.33f) {
-        trails.push_back(Trail(position.x, position.y));
+        trails.add(Trail(position.x, position.y));
         trail_time_elapsed = 0.0f;
     }
 

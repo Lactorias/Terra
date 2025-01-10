@@ -63,7 +63,7 @@ auto Renderer::batch_trails(const Colony &colony) -> void {
     trail_vertices.clear();
 
     for (auto const &ant : colony.get_ants()) {
-        for (auto const &trail : ant.trails) {
+        for (auto const &trail : ant.trails.get_buffer()) {
             trail_vertices.append(sf::Vertex(trail.get_pos(), sf::Color::Blue));
         }
     }

@@ -5,7 +5,10 @@
 #include "../includes/simulation/world/world.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/Window/ContextSettings.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
@@ -17,20 +20,21 @@
 int main() {
     srand(static_cast<unsigned int>(time(0)));
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 4;
+    settings.antialiasingLevel = 0;
 
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Ant Simulator - Terra",
+    sf::RenderWindow window(sf::VideoMode(2000, 800), "Ant Simulator - Terra",
                             sf::Style::Default, settings);
 
-    Colony colony(100, 100, 10);
-
-    auto square_width = window.getSize().x / 2;
-
-    World world;
+    Colony colony(100, 100, 300);
 
     Renderer renderer;
 
-    window.setFramerateLimit(144);
+    auto const square_width = window.getSize().x / 2;
+
+    World world;
+
+    sf::VertexArray lines(sf::Lines);
+
     sf::Clock clock;
 
     while (window.isOpen()) {
@@ -47,14 +51,16 @@ int main() {
         window.clear();
 
         renderer.render(window, colony, dt, world, window);
-        QTree qtree = QTree(0, 0, square_width * 2, square_width * 2, 0, 0,
+        QTree qtree = QTree(0, 0, square_width * 2, square_width * 2, 0, 8,
                             colony.get_ants(), world.foods);
         qtree.collect_entities(qtree.ants_contained, qtree.all_ants,
                                &QTree::ants_contained);
         qtree.collect_entities(qtree.foods_contained, qtree.all_foods,
                                &QTree::foods_contained);
         qtree.observe();
-        qtree.draw_q(window);
+        lines.clear();
+        qtree.draw_q(window, lines);
+        window.draw(lines);
         window.display();
     }
 }

@@ -15,8 +15,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add the executable by specifying the source file
 
 add_compile_options(
-  -g
-  -Og
+  -Ofast
+  -flto=4
+  -march=native
+  -fno-exceptions
+  -fno-rtti
+  -flto
+  -funroll-loops
   -Wall
   -Wextra
   -pedantic-errors

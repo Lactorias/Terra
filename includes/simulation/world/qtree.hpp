@@ -7,6 +7,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <array>
 #include <cstdint>
@@ -23,8 +25,25 @@ public:
         square = sf::RectangleShape(sf::Vector2f(width, width));
         square.setPosition(x, y);
         square.setFillColor(sf::Color::Transparent);
-        square.setOutlineThickness(border_width);
+        square.setOutlineThickness(1);
         square.setOutlineColor(sf::Color::Red);
+    }
+
+    auto append_vertex(sf::VertexArray &vertex_array, sf::Color color) const
+        -> void {
+        vertex_array.append(sf::Vertex(sf::Vector2f(x, y), color));
+        vertex_array.append(sf::Vertex(sf::Vector2f(x + width, y), color));
+
+        vertex_array.append(sf::Vertex(sf::Vector2f(x + width, y), color));
+        vertex_array.append(
+            sf::Vertex(sf::Vector2f(x + width, y + width), color));
+
+        vertex_array.append(
+            sf::Vertex(sf::Vector2f(x + width, y + width), color));
+        vertex_array.append(sf::Vertex(sf::Vector2f(x, y + width), color));
+
+        vertex_array.append(sf::Vertex(sf::Vector2f(x, y + width), color));
+        vertex_array.append(sf::Vertex(sf::Vector2f(x, y), color));
     }
 
 private:
@@ -52,7 +71,8 @@ public:
         tiles[3] = QTile(x + child_width, y + child_width, child_width);
     }
 
-    auto draw_q(sf::RenderWindow &window) -> void;
+    auto draw_q(sf::RenderWindow &window, sf::VertexArray &vertex_array)
+        -> void;
 
     auto subdivide() -> void;
 

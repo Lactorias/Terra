@@ -15,7 +15,7 @@ public:
         : position(x, y), num_ants(num_ants) {
         for (int32_t i = 0; i < num_ants; i++) {
             float rand_dir = static_cast<float>(rand() / RAND_MAX * 2.0f);
-            ants.emplace_back(x, y, rand_dir);
+            ants.emplace_back(x, y, rand_dir, 10);
         }
     }
 

@@ -1,6 +1,7 @@
 #ifndef ANT
 #define ANT
 
+#include "../circularbuffer.hpp"
 #include "trail.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -8,12 +9,12 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
-#include <vector>
 
 class Ant {
 public:
-    Ant(float x, float y, float angle)
-        : position(x, y), direction(angle), direction_time_elapsed(0.0f) {}
+    Ant(float x, float y, float angle, int32_t trail_capacity)
+        : position(x, y), direction(angle), direction_time_elapsed(0.0f),
+          trails(trail_capacity) {}
 
     auto update(const float DT) -> void;
 
@@ -29,7 +30,7 @@ public:
 
     constexpr auto lerp_angle(float start, float end, float t) -> float;
 
-    std::vector<Trail> trails;
+    CircularBuffer<Trail> trails;
     sf::Vector2f position;
     float direction;
     float target_direction;
@@ -38,7 +39,7 @@ public:
     constexpr static float direction_time_period = 0.5f;
     constexpr static float PI = 3.14159265f;
     const int32_t map_height = 800;
-    const int32_t map_width = 800;
+    const int32_t map_width = 2000;
     float turn_speed = 3.0f;
 };
 

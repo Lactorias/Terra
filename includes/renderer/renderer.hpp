@@ -4,11 +4,15 @@
 #include "../simulation/ant/trail.hpp"
 #include "../simulation/world/colony.hpp"
 #include "../simulation/world/world.hpp"
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <unordered_map>
 
 class Renderer {
 public:
