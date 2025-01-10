@@ -52,12 +52,13 @@ int main() {
 
         renderer.render(window, colony, dt, world, window);
         QTree qtree = QTree(0, 0, square_width * 2, square_width * 2, 0, 8,
-                            colony.get_ants(), world.foods);
+                            colony.get_ants(), world.foods, world);
         qtree.collect_entities(qtree.ants_contained, qtree.all_ants,
                                &QTree::ants_contained);
         qtree.collect_entities(qtree.foods_contained, qtree.all_foods,
                                &QTree::foods_contained);
         qtree.observe();
+        qtree.search_tiles();
         lines.clear();
         qtree.draw_q(window, lines);
         window.draw(lines);

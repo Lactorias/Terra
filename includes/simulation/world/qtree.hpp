@@ -1,6 +1,7 @@
 #ifndef QTREE
 #define QTREE
 
+#include "../world/world.hpp"
 #include "colony.hpp"
 #include "food.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -14,6 +15,19 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+
+template <typename T>
+concept has_pos_size = requires(T t) {
+    t.position.x;
+    t.position.y;
+    t.size;
+};
+
+template <typename T>
+concept has_pos = requires(T t) {
+    t.position.x;
+    t.position.y;
+};
 
 class QTile {
 public:
@@ -59,9 +73,10 @@ class QTree {
 public:
     QTree(float x, float y, float width, float height, int32_t level,
           int32_t max_level, const std::vector<Ant> &ants,
-          const std::vector<Food> &foods)
+          const std::vector<Food> &foods, World &world)
         : x(x), y(y), width(width), height(height), level(level),
-          max_level(max_level), all_ants(ants), all_foods(foods) {
+          max_level(max_level), all_ants(ants), all_foods(foods),
+          m_world(world) {
         for (size_t i = 0; i < 4; i++)
             children[i] = nullptr;
         auto child_width = width / 2;
@@ -116,6 +131,17 @@ public:
                entity.position.y <= tile_y + tile_width;
     }
 
+    template <has_pos T, has_pos_size V>
+    auto entity_collison(const T &entity_one, const V &entity_two) -> bool {
+        return entity_one.position.x >= entity_two.position.x &&
+               entity_one.position.x <=
+                   entity_two.position.x + entity_two.size &&
+               entity_one.position.y >= entity_two.position.y &&
+               entity_one.position.y <= entity_two.position.y + entity_two.size;
+    }
+
+    auto search_tiles() -> void;
+
     auto grab_food(Ant &ant, Food &food) -> void;
 
 private:
@@ -131,6 +157,7 @@ public:
     std::vector<Ant> ants_contained{};
     std::vector<Food> all_foods;
     std::vector<Food> foods_contained{};
+    World &m_world;
     // std::vector<Colony *> colonies;
 };
 

@@ -41,6 +41,7 @@ public:
     const int32_t map_height = 800;
     const int32_t map_width = 2000;
     float turn_speed = 3.0f;
+    bool has_food = false;
 };
 
 #endif // ANT
