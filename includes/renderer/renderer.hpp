@@ -23,7 +23,7 @@ public:
 
     auto batch_ants(const Colony &colony) -> void;
 
-    auto batch_trails(const Colony &colony) -> void;
+    auto batch_trails(Colony &colony) -> void;
 
     auto batch_food(const World &world, sf::RenderTarget &target) -> void;
 

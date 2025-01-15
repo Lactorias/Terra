@@ -5,17 +5,23 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Transform.hpp>
 #include <SFML/Graphics/Vertex.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 
 auto Renderer::render(sf::RenderTarget &target, Colony &colony, float &DT,
                       World &world, sf::RenderWindow &window) -> void {
+    static sf::Clock clock;
     batch_ants(colony);
     batch_trails(colony);
     batch_food(world, target);
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
-        world.food_creation(mouse_pos, window);
+    if (clock.getElapsedTime().asSeconds() >= 0.2f) {
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+            world.food_creation(mouse_pos, window);
+        }
+        clock.restart();
     }
 
     draw_batches(target);
@@ -59,12 +65,17 @@ auto Renderer::batch_ants(const Colony &colony) -> void {
     }
 }
 
-auto Renderer::batch_trails(const Colony &colony) -> void {
+auto Renderer::batch_trails(Colony &colony) -> void {
     trail_vertices.clear();
 
-    for (auto const &ant : colony.get_ants()) {
-        for (auto const &trail : ant.trails.get_buffer()) {
-            trail_vertices.append(sf::Vertex(trail.get_pos(), sf::Color::Blue));
+    for (auto &ant : colony.get_ants()) {
+        for (auto &trail : ant.trails.get_buffer()) {
+            if (ant.has_food)
+                trail.trail_type = Trail::Trail_Type::HOME;
+            trail_vertices.append(sf::Vertex(
+                trail.get_pos(), trail.trail_type == Trail::Trail_Type::HOME
+                                     ? sf::Color::Red
+                                     : sf::Color::Blue));
         }
     }
 }

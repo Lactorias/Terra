@@ -15,6 +15,7 @@
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
+#include <functional>
 #include <iostream>
 
 int main() {
@@ -22,10 +23,10 @@ int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 0;
 
-    sf::RenderWindow window(sf::VideoMode(2000, 800), "Ant Simulator - Terra",
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Ant Simulator - Terra",
                             sf::Style::Default, settings);
 
-    Colony colony(100, 100, 300);
+    Colony colony(100, 100, 30);
 
     Renderer renderer;
 
@@ -52,12 +53,14 @@ int main() {
 
         renderer.render(window, colony, dt, world, window);
         QTree qtree = QTree(0, 0, square_width * 2, square_width * 2, 0, 8,
-                            colony.get_ants(), world.foods, world);
-        qtree.collect_entities(qtree.ants_contained, qtree.all_ants,
-                               &QTree::ants_contained);
-        qtree.collect_entities(qtree.foods_contained, qtree.all_foods,
-                               &QTree::foods_contained);
+                            colony.get_ants(), world.foods, world, colony);
+
+        qtree.collect_entities(qtree.ants_contained, qtree.all_ants);
+
+        qtree.collect_entities(qtree.foods_contained, qtree.all_foods);
+
         qtree.observe();
+
         qtree.search_tiles();
         lines.clear();
         qtree.draw_q(window, lines);

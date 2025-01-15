@@ -3,6 +3,8 @@
 
 auto Colony::get_ants() const -> const std::vector<Ant> & { return ants; }
 
+auto Colony::get_ants() -> std::vector<Ant> & { return ants; }
+
 auto Colony::get_pos() const -> const sf::Vector2f & { return position; }
 
 auto Colony::update(float DT) -> void {

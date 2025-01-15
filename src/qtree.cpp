@@ -9,9 +9,8 @@ using std::find;
 
 auto QTree::draw_q(sf::RenderWindow &window, sf::VertexArray &vertex_array)
     -> void {
-    for (auto const &tile : tiles) {
+    if (tile.visible)
         tile.append_vertex(vertex_array, sf::Color::Red);
-    }
     for (auto const &child : children) {
         if (child) {
             child->draw_q(window, vertex_array);
@@ -45,22 +44,22 @@ auto QTree::subdivide() -> void {
     }
     level++;
     auto child_width = width / 2.0f;
-    children[0] =
-        std::make_unique<QTree>(x, y, child_width, child_width, level + 1,
-                                max_level, all_ants, all_foods, m_world);
-    children[1] = std::make_unique<QTree>(x + child_width, y, child_width,
-                                          child_width, level + 1, max_level,
-                                          all_ants, all_foods, m_world);
-    children[2] = std::make_unique<QTree>(x, y + child_width, child_width,
-                                          child_width, level + 1, max_level,
-                                          all_ants, all_foods, m_world);
+    children[0] = std::make_unique<QTree>(x, y, child_width, child_width,
+                                          level + 1, max_level, all_ants,
+                                          all_foods, m_world, m_colony);
+    children[1] = std::make_unique<QTree>(
+        x + child_width, y, child_width, child_width, level + 1, max_level,
+        all_ants, all_foods, m_world, m_colony);
+    children[2] = std::make_unique<QTree>(
+        x, y + child_width, child_width, child_width, level + 1, max_level,
+        all_ants, all_foods, m_world, m_colony);
     children[3] = std::make_unique<QTree>(
         x + child_width, y + child_width, child_width, child_width, level + 1,
-        max_level, all_ants, all_foods, m_world);
+        max_level, all_ants, all_foods, m_world, m_colony);
 
     for (const auto &ant : ants_contained) {
         for (int i = 0; i < 4; ++i) {
-            if (within_tile(ant, tiles[i])) {
+            if (within_tile(ant, children[i]->tile)) {
                 children[i]->ants_contained.push_back(ant);
                 break;
             }
@@ -69,7 +68,7 @@ auto QTree::subdivide() -> void {
 
     for (const auto &food : foods_contained) {
         for (int i = 0; i < 4; ++i) {
-            if (within_tile(food, tiles[i])) {
+            if (within_tile(food, children[i]->tile)) {
                 children[i]->foods_contained.push_back(food);
                 break;
             }
@@ -81,10 +80,10 @@ auto QTree::subdivide() -> void {
 }
 
 auto QTree::observe() -> void {
-    if ((ants_contained.size() >= capacity ||
-         foods_contained.size() >= capacity) &&
-        children[0] == nullptr)
+    if (children[0] == nullptr && (ants_contained.size() >= capacity ||
+                                   foods_contained.size() >= capacity)) {
         subdivide();
+    }
     if (children[0] != nullptr) {
         for (auto const &child : children) {
             child->observe();
@@ -93,8 +92,11 @@ auto QTree::observe() -> void {
 }
 
 auto QTree::grab_food(Ant &ant, Food &food) -> void {
-    if (!ant.has_food) {
-        ant.has_food = true;
+    auto it_ant =
+        find(begin(m_colony.get_ants()), end(m_colony.get_ants()), ant);
+    if (!it_ant->has_food) {
+        it_ant->has_food = true;
+
         auto it = find(begin(foods_contained), end(foods_contained), food);
         auto it_to_world = find(begin(m_world.foods), end(m_world.foods), food);
 
