@@ -24,3 +24,6 @@ $ ./terra
 # Current State
 
 Terra currently has ants, food on mouse click, and a dynamic Quadtree which handles collision detection blazingly fast.
+
+![Image of Terra in action](assets/antimageterra.png)
+
