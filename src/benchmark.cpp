@@ -5,9 +5,6 @@
 #include <benchmark/benchmark.h>
 
 static void BM_SimulationStep(benchmark::State &state) {
-    // Initialize SFML and other components
-    //                        sf::Style::Default, settings);
-    //
     InitWindow(800, 800, "Ant Simulator - Terra");
     Texture2D ant_texture = LoadTexture("../build/ant.png");
     auto const window_width = 800;
@@ -23,7 +20,7 @@ static void BM_SimulationStep(benchmark::State &state) {
 
     while (state.KeepRunning()) {
         float dt = GetFrameTime();
-        colony.update(dt); // Update the colony state
+        colony.update(dt);
         BeginDrawing();
         ClearBackground(BLACK);
         QTree qtree =

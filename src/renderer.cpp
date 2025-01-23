@@ -4,29 +4,26 @@
 #include <iostream>
 #include <vector>
 
-// Render all elements of the simulation
 void Renderer::render(Colony &colony, float &, World &world) {
-    static float timeAccumulator = 0.0f;
-    timeAccumulator += GetFrameTime();
+    static float time_accumulator = 0.0f;
+    time_accumulator += GetFrameTime();
 
     batch_ants(colony);
     batch_trails(colony);
     batch_food(world);
 
-    if (timeAccumulator >= 0.2f) {
+    if (time_accumulator >= 0.2f) {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             Vector2 mousePos = GetMousePosition();
             std::cout << "hello";
             world.create_food(mousePos);
         }
-        timeAccumulator = 0.0f;
+        time_accumulator = 0.0f;
     }
 }
 
-// Draw all the batched elements
 void Renderer::draw_batches() {}
 
-// Batch ants for rendering
 void Renderer::batch_ants(const Colony &colony) {
     float scale_factor = 0.03f;
 
@@ -39,7 +36,6 @@ void Renderer::batch_ants(const Colony &colony) {
     }
 }
 
-// Batch trails for rendering
 void Renderer::batch_trails(Colony &colony) {
     trail_vertices.clear();
 
@@ -56,7 +52,6 @@ void Renderer::batch_trails(Colony &colony) {
     }
 }
 
-// Batch food for rendering
 void Renderer::batch_food(const World &world) {
     food_vertices.clear();
 
